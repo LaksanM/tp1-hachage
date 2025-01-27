@@ -5,7 +5,7 @@ import {NotFoundError} from "./errors.js";
 import {createHash} from 'node:crypto'
 
 /* Chemin de stockage des blocks */
-const path = './data/blockchain.json'
+const path = '../data/blockchain.json'
 
 /**
  * Mes définitions
@@ -24,7 +24,7 @@ const path = './data/blockchain.json'
  */
 export async function findBlocks() {
     const blocks = await readFile(path)
-    return blocks.length === 0 ? null : JSON.parse(blocks)
+    return JSON.parse(blocks)
 }
 
 /**
@@ -39,13 +39,13 @@ export async function findBlock(partialBlock) {
 }
 
 /**
- * Trouve le dernier block de la chaine
+ * Trouve le dernier lock de la chaine
  * @return {Promise<Block|null>}
  */
 export async function findLastBlock() {
     const blocks = await findBlocks()
 
-    return blocks === null ? null : blocks[blocks.length - 1] || null
+   return blocks === null ? null : blocks[blocks.length - 1] || null
 }
 
 /**
@@ -86,7 +86,6 @@ export async function verifBlocks() {
     if (blocks == null ) {
         return false
     }
-
     for (let i = 0; i < blocks.length; i++) {
         const newSecretMessage = i === 0 ? monSecret : JSON.stringify(blocks[i-1])
         const calchash =  createHash("sha256").update(newSecretMessage).digest('hex')
